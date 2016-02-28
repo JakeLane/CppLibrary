@@ -10,14 +10,16 @@
 
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
-#include "../include/LinkedList.hpp"
-
+// Constructor
 template<class T>
 LinkedList<T>::LinkedList(): _head(NULL), _tail(NULL) {}
 
+// Destructor
 template<class T>
 LinkedList<T>::~LinkedList() {
+	// O(n)
 	Node<T>* ptr = _head;
 	Node<T>* temp = NULL;
 	// Free up memory from each node
@@ -28,58 +30,65 @@ LinkedList<T>::~LinkedList() {
 	}
 }
 
+// Return the node at index i
 template<typename T>
-Node<T>* LinkedList<T>::getNode(int index){
+Node<T>* LinkedList<T>::getNode(int i){
 	// O(n)
-	int i = 0;
+	int j = 0;
 	Node<T>* temp = _head;
 
-	while (i < index) {
+	while (j < i) {
 		temp = temp->next;
 		if (temp == NULL) {
 			return temp;
 		}
-		i++;
+		j++;
 	}
 	return temp;
 }
 
+// Get the first object in list
 template <typename T>
 T LinkedList<T>::getFirst() {
 	// O(1)
-	// TODO Throw exception on empty
+	// Undefined behaviour if _head is nullptr
 	return _head->data;
 }
 
+// Get the last object in list
 template<class T>
 T LinkedList<T>::getLast() {
 	// O(1)
-	// TODO Throw exception on empty
+	// Undefined behaviour if _head is nullptr
 	return _tail->data;
 }
 
+// Get the object at index i
 template<class T>
-T LinkedList<T>::get(int index) {
+T LinkedList<T>::get(int i) {
 	// O(n)
-	return getNode(index)->data;
+	return getNode(i)->data;
 }
 
+// Set the first object in list
 template <typename T>
 void LinkedList<T>::setFirst(T object) {
 	// O(1)
 	return getFirst() = object;
 }
 
+// Set the last object in list
 template<class T>
 void LinkedList<T>::setLast(T object) {
 	// O(1)
 	return getLast() = object;
 }
 
+// Set the object at index i
 template<class T>
-void LinkedList<T>::set(int index, T object) {
+void LinkedList<T>::set(int i, T object) {
 	// O(n)
-	return get(index) = object;
+	return get(i) = object;
 }
 
 // Push to the tail
@@ -117,7 +126,7 @@ void LinkedList<T>::addFirst(T object) {
 
 // Add object to index
 template<class T>
-void LinkedList<T>::add(int index, T object) {
+void LinkedList<T>::add(int i, T object) {
 	// O(n)
 	if (_head != NULL) {
 		Node<T>* new_node = new Node<T>();
@@ -125,7 +134,7 @@ void LinkedList<T>::add(int index, T object) {
 
 		if (_head->next != NULL) {
 			// There are at least 2 nodes
-			Node<T>* previous_node = getNode(index - 1);
+			Node<T>* previous_node = getNode(i - 1);
 			new_node->next = previous_node->next;
 			previous_node->next = new_node;
 		} else {
@@ -146,34 +155,66 @@ void LinkedList<T>::add(int index, T object) {
 template<class T>
 T LinkedList<T>::pop() {
 	// O(1)
-	if (_head != NULL) {
-		Node<T>* temp = _head;
-		_head = _head->next;
-		T temp_data = temp->data;
-		delete temp;
-		return temp_data;
-	} else {
-		// List is empty
-		// TODO Throw exception
-		return NULL;
-	}
+	// Undefined behaviour if _head is nullptr
+	Node<T>* temp = _head;
+	_head = _head->next;
+	T temp_data = temp->data;
+	delete temp;
+	return temp_data;
 }
 
 // Remove last object
 template<class T>
 T LinkedList<T>::removeLast() {
 	// O(n)
-	if (_head != NULL) {
-		Node<T>* temp = _tail;
+	// Undefined behaviour if _tail is nullptr
+	Node<T>* temp = _tail;
 
-		if (_head != _tail) {
-			Node<T>* ptr = _head;
-			while (ptr->next != _tail) {
-				ptr = ptr->next;
-			}
-			ptr->next = NULL;
-			ptr = _tail;
+	if (_head != _tail) {
+		Node<T>* ptr = _head;
+		while (ptr->next != _tail) {
+			ptr = ptr->next;
+		}
+		ptr->next = NULL;
+		ptr = _tail;
+	} else {
+		_head = NULL;
+		_tail = NULL;
+	}
+
+	T temp_data = temp->data;
+	delete temp;
+	return temp_data;
+}
+
+// Remove object from index
+template<class T>
+T LinkedList<T>::remove(int i) {
+	// O(n)
+	// Undefined behaviour if head is nullptr
+	if (i > 0) {
+		// There is at least 1 previous node
+		Node<T>* previous_node = getNode(i - 1);
+		Node<T>* temp = previous_node->next;
+		if (temp == _tail) {
+			_tail = previous_node;
+		}
+		if (temp != NULL) {
+			previous_node->next = temp->next;
 		} else {
+			previous_node->next = NULL;
+		}
+		T temp_data = temp->data;
+		delete temp;
+		return temp_data;
+	} else {
+		// We are at the head
+		Node<T>* temp = _head;
+		if (_head->next != NULL) {
+			// There are at least two nodes
+			_head = _head->next;
+		} else {
+			// There is only one node, the head
 			_head = NULL;
 			_tail = NULL;
 		}
@@ -181,54 +222,13 @@ T LinkedList<T>::removeLast() {
 		T temp_data = temp->data;
 		delete temp;
 		return temp_data;
-	} else {
-		// List is empty
-		// TODO Throw exception
-		return 0;
 	}
 }
 
-// Remove object from index
+// Return true if empty
 template<class T>
-T LinkedList<T>::remove(int index) {
-	// O(n)
-	if (_head != NULL) {
-		if (index > 0) {
-			// There is at least 1 previous node
-			Node<T>* previous_node = getNode(index - 1);
-			Node<T>* temp = previous_node->next;
-			if (temp == _tail) {
-				_tail = previous_node;
-			}
-			if (temp != NULL) {
-				previous_node->next = temp->next;
-			} else {
-				previous_node->next = NULL;
-			}
-			T temp_data = temp->data;
-			delete temp;
-			return temp_data;
-		} else {
-			// We are at the head
-			Node<T>* temp = _head;
-			if (_head->next != NULL) {
-				// There are at least two nodes
-				_head = _head->next;
-			} else {
-				// There is only one node, the head
-				_head = NULL;
-				_tail = NULL;
-			}
-
-			T temp_data = temp->data;
-			delete temp;
-			return temp_data;
-		}
-	} else {
-		// No head, throw exception
-		// TODO Throw exception
-		return NULL;
-	}
+bool LinkedList<T>::empty() {
+	return _head == NULL;
 }
 
 // Pop from the head

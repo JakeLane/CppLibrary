@@ -2,9 +2,7 @@
  * @file LinkedList.hpp
  * @author Jake Lane <me@jakelane.me>
  *
- * @section DESCRIPTION
- *
- * Declaration of a Linked list
+ * Declaration of a Single-Linked list
  * See Wikipedia for more details at https://en.wikipedia.org/wiki/Linked_list
  */
 
@@ -20,40 +18,104 @@ struct Node {
 template<class T>
 class LinkedList {
 public:
-	// Constructor
+	/**
+	 * Constructor that initialises to NULL
+	 */
 	LinkedList();
-	// Destructor
+	/**
+	 * Destructor that frees up allocated space
+	 */
 	~LinkedList();
 
-	// Get the first object
+	/**
+	 * Get the first object in the List
+	 * O(1)
+	 * @return The first object in the LinkedList
+	 */
 	T getFirst();
-	// Get the last object
+	/**
+	 * Get the last object in the List
+	 * O(1)
+	 * @return The last object in the LinkedList
+	 */
 	T getLast();
-	// Get the nth object
-	T get(int index);
+	/**
+	 * Get the object in the List at the chosen index
+	 * O(n)
+	 * @return The i th object in the LinkedList
+	 */
+	T get(int i);
 
-	// Set the first object
+	/**
+	 * Set the first object in the List
+	 * O(1)
+	 * @param object Object to replace the start of the LinkedList
+	 */
 	void setFirst(T object);
-	// Set the last object
+	/**
+	 * Set the last object in the List
+	 * O(1)
+	 * @param object Object to replace the end of the LinkedList
+	 */
 	void setLast(T object);
-	// Set the nth object
-	void set(int index, T object);
+	/**
+	 * Set the object at the index in the List
+	 * O(n)
+	 * @param i Index that the object will replace
+	 * @param Object to be set in LinkedList
+	 */
+	void set(int i, T object);
 
-	// Push object to the tail
+	/**
+	 * Push to the back of the list
+	 * O(1)
+	 * @param object Object to add to the end of the LinkedList
+	 */
 	void push(T object);
-	// Add object to the head
+	/**
+	 * Add to the start of the list
+	 * O(1)
+	 * @param object Object to add to the start of the LinkedList
+	 */
 	void addFirst(T object);
-	// Add object to index
-	void add(int index, T object);
+	/**
+	 * Add the object at the index in the List
+	 * O(n)
+	 * @param i Index that the object will sit
+	 * @param object Object to be added in LinkedList
+	 */
+	void add(int i, T object);
 
-	// Pop element from the head
+	/**
+	 * Pop the object from start of the list
+	 * O(1)
+	 * @return The (previously) first object in the LinkedList
+	 */
 	T pop();
-	// Remove last object
+	/**
+	 * Remove the object from end of the list
+	 * O(n)
+	 * @return The (previously) last object in the LinkedList
+	 */
 	T removeLast();
-	// Remove object from index
-	T remove(int index);
+	/**
+	 * Remove the object from the chosen index
+	 * O(n)
+	 * @return The (previously) i th object in the LinkedList
+	 */
+	T remove(int i);
 
-	// Retrieve the size LinkedList
+	/**
+	 * Test whether the list is empty
+	 * O(1)
+	 * @return True if there is no objects in the LinkedList
+	 */
+	bool empty();
+	/**
+	 * The length of the list
+	 * O(n)
+	 * @return The number of objects in the LinkedList
+	 */
 	int size();
 
 private:
@@ -62,8 +124,8 @@ private:
 	// Pointer to tail node
 	Node<T>* _tail;
 
-	// Get node from index
-	Node<T>* getNode(int index);
+	// Get node from i
+	Node<T>* getNode(int i);
 };
 
 // Template implementation file
